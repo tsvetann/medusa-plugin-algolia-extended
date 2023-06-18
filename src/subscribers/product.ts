@@ -1,5 +1,4 @@
-import SearchService from "services/search";
-import { EntityManager } from "typeorm";
+import SearchService from "../services/search";
 import { ProductService, ProductVariantService } from "@medusajs/medusa";
 import { IEventBusService } from "@medusajs/types";
 import { defaultSearchIndexingProductRelations } from "@medusajs/utils"
@@ -15,7 +14,6 @@ export default class MySubscriber {
       searchService,
       productService
     }: {
-      manager: EntityManager;
       eventBusService: IEventBusService;
       searchService: SearchService;
       productService: ProductService;

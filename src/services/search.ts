@@ -1,19 +1,22 @@
 import { SearchTypes } from "@medusajs/types"
 import { SearchUtils } from "@medusajs/utils"
 import Algolia, { SearchClient } from "algoliasearch"
+import { MedusaContainer } from "@medusajs/modules-sdk"
 import { AlgoliaPluginOptions, SearchOptions } from "../types"
 import { transformProduct } from "../utils/transformer"
 
-class AlgoliaService extends SearchUtils.AbstractSearchService {
+class SearchService extends SearchUtils.AbstractSearchService {
   isDefault = false
 
   protected readonly config_: AlgoliaPluginOptions
   protected readonly client_: SearchClient
+  protected readonly container_: MedusaContainer
 
-  constructor(container: any, options: AlgoliaPluginOptions) {
+  constructor(container: MedusaContainer, options: AlgoliaPluginOptions) {
     super(container, options)
 
     this.config_ = options
+    this.container_ = container
 
     const { applicationId, adminApiKey } = options
 
@@ -70,6 +73,7 @@ class AlgoliaService extends SearchUtils.AbstractSearchService {
       documents
     )
 
+    console.log(`Adding ${transformedDocuments.length} documents to Algolia's ${indexName} index`)
     return await this.client_
       .initIndex(indexName)
       .saveObjects(transformedDocuments)
@@ -167,11 +171,21 @@ class AlgoliaService extends SearchUtils.AbstractSearchService {
           this.config_.settings?.[SearchTypes.indexTypes.PRODUCTS]
             ?.transformer ?? transformProduct
 
-        return documents.map(productsTransformer)
+        const transformed = await Promise.allSettled(documents.map(doc => productsTransformer(doc, this.container_)));
+        const rejected = <T,>(p: PromiseSettledResult<T>): p is PromiseRejectedResult => p.status === 'rejected';
+
+        const errors = transformed.filter(rejected);
+        if (errors.length) {
+          console.error('Error transforming products', errors);
+        }
+
+        const fulfilled = <T,>(p:PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === 'fulfilled';
+
+        return transformed.filter(fulfilled).map((r) => r.value);
       default:
         return documents
     }
   }
 }
 
-export default AlgoliaService
+export default SearchService

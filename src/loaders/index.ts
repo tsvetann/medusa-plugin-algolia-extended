@@ -1,25 +1,23 @@
 import { Logger, MedusaContainer } from "@medusajs/modules-sdk"
-import AlgoliaService from "../services/algolia"
+import SearchService from "../services/search"
 import { AlgoliaPluginOptions } from "../types"
 
 export default async (
   container: MedusaContainer,
   options: AlgoliaPluginOptions
 ) => {
-  const logger: Logger = container.resolve("logger")
   try {
-    const algoliaService: AlgoliaService = container.resolve("algoliaService")
+    const searchService: SearchService = container.resolve("searchService")
 
     const { settings } = options
-    console.log({ options })
 
     await Promise.all(
       Object.entries(settings || {}).map(async ([indexName, value]) => {
-        return await algoliaService.updateSettings(indexName, value)
+        return await searchService.updateSettings(indexName, value)
       })
     )
   } catch (err) {
     // ignore
-    logger.warn(err)
+    console.error(err)
   }
 }

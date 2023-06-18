@@ -1,8 +1,9 @@
 import { variantKeys } from "@medusajs/types"
+import { MedusaContainer } from "@medusajs/medusa"
 
 const prefix = `variant`
 
-export const transformProduct = (product: any) => {
+export const transformProduct = (product: any, container?: MedusaContainer) => {
   let transformedProduct = { ...product } as Record<string, unknown>
 
   const initialObj = variantKeys.reduce((obj, key) => {

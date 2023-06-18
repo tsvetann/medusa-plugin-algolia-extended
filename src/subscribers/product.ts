@@ -6,13 +6,11 @@ import { defaultSearchIndexingProductRelations } from "@medusajs/utils"
 import { indexTypes } from "medusa-core-utils"
 
 export default class MySubscriber {
-  protected readonly manager_: EntityManager;
   protected readonly searchService_: SearchService
   protected readonly productService_: ProductService
 
   constructor(
     {
-      manager,
       eventBusService,
       searchService,
       productService
@@ -23,7 +21,6 @@ export default class MySubscriber {
       productService: ProductService;
     }
   ) {
-    this.manager_ = manager;
     this.searchService_ = searchService;
     this.productService_ = productService;
 

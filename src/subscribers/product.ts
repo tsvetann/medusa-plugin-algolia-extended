@@ -1,5 +1,4 @@
-import SearchService from "../services/search";
-import { ProductService, ProductVariantService } from "@medusajs/medusa";
+import { ProductService, ProductVariantService, SearchService } from "@medusajs/medusa";
 import { IEventBusService } from "@medusajs/types";
 import { defaultSearchIndexingProductRelations } from "@medusajs/utils"
 import { indexTypes } from "medusa-core-utils"

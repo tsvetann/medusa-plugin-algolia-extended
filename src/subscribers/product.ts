@@ -4,7 +4,7 @@ import { IEventBusService } from "@medusajs/types";
 import { defaultSearchIndexingProductRelations } from "@medusajs/utils"
 import { indexTypes } from "medusa-core-utils"
 
-export default class MySubscriber {
+export default class ProductSearchSubscriber {
   protected readonly searchService_: SearchService
   protected readonly productService_: ProductService
 

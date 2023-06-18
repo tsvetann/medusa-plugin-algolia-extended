@@ -1,6 +1,6 @@
 {
   "name": "medusa-plugin-algolia-extended",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Extended Algolia search plugin for Medusa",
   "author": "Tsvetan Nikolov <live.webscore@gmail.com>",
   "license": "MIT",
@@ -12,8 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/medusajs/medusa",
-    "directory": "packages/medusa-plugin-algolia"
+    "url": "git@github.com:tsvetann/medusa-plugin-algolia-extended.git"
   },
   "files": [
     "dist"

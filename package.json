@@ -8,14 +8,20 @@
     "ecommerce",
     "medusa",
     "medusa-plugin-algolia-extended",
-    "medusa-plugin"
+    "medusa-plugin-search"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medusajs/medusa",
+    "directory": "packages/medusa-plugin-algolia"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "clean": "cross-env ./node_modules/.bin/rimraf dist",
-    "build": "cross-env npm run clean && tsc -p tsconfig.json",
+    "build": "babel src --out-dir ./dist --ignore **/__tests__ --extensions \".ts,.js\"",
+    "prepare": "cross-env NODE_ENV=production npm run build",
     "watch": "cross-env tsc --watch",
     "test": "cross-env jest",
     "start:custom": "cross-env npm run build && node --preserve-symlinks index.js",

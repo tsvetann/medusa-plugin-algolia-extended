@@ -5,7 +5,7 @@ import { indexTypes } from "medusa-core-utils"
 
 type InjectedDependencies = {
   eventBusService: IEventBusService
-  searchService: ISearchService
+  algoliaService: ISearchService
   productService: ProductService
 }
 
@@ -16,7 +16,7 @@ export default class ProductSearchSubscriber {
 
   constructor(container: InjectedDependencies) {
     this.eventBusService_ = container.eventBusService
-    this.searchService_ = container.searchService
+    this.searchService_ = container.algoliaService
     this.productService_ = container.productService
 
     this.eventBusService_.subscribe(ProductService.Events.UPDATED, this.handleProductUpdate);

@@ -1,5 +1,5 @@
 import { MedusaContainer } from "@medusajs/modules-sdk"
-import SearchService from "../services/search"
+import AlgoliaSearchService from "../services/algolia"
 import { AlgoliaPluginOptions } from "../types"
 
 export default async (
@@ -7,7 +7,7 @@ export default async (
   options: AlgoliaPluginOptions
 ) => {
   try {
-    const searchService: SearchService = container.resolve("searchService")
+    const searchService: AlgoliaSearchService = container.resolve("searchService")
 
     const { settings } = options
 

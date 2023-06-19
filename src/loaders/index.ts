@@ -7,7 +7,7 @@ export default async (
   options: AlgoliaPluginOptions
 ) => {
   try {
-    const searchService: AlgoliaSearchService = container.resolve("searchService")
+    const searchService: AlgoliaSearchService = container.resolve("algoliaService")
 
     const { settings } = options
 

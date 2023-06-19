@@ -1,32 +1,30 @@
-import { ProductService, ProductVariantService, SearchService } from "@medusajs/medusa";
-import { IEventBusService } from "@medusajs/types";
+import { ProductService, ProductVariantService } from "@medusajs/medusa";
+import { IEventBusService, ISearchService } from "@medusajs/types";
 import { defaultSearchIndexingProductRelations } from "@medusajs/utils"
 import { indexTypes } from "medusa-core-utils"
 
+type InjectedDependencies = {
+  eventBusService: IEventBusService
+  searchService: ISearchService
+  productService: ProductService
+}
+
 export default class ProductSearchSubscriber {
-  protected readonly searchService_: SearchService
-  protected readonly productService_: ProductService
+  private readonly eventBusService_: IEventBusService
+  private readonly searchService_: ISearchService
+  private readonly productService_: ProductService
 
-  constructor(
-    {
-      eventBusService,
-      searchService,
-      productService
-    }: {
-      eventBusService: IEventBusService;
-      searchService: SearchService;
-      productService: ProductService;
-    }
-  ) {
-    this.searchService_ = searchService;
-    this.productService_ = productService;
+  constructor(container: InjectedDependencies) {
+    this.eventBusService_ = container.eventBusService
+    this.searchService_ = container.searchService
+    this.productService_ = container.productService
 
-    eventBusService.subscribe(ProductService.Events.UPDATED, this.handleProductUpdate);
-    eventBusService.subscribe(ProductService.Events.CREATED, this.handleProductCreation);
-    eventBusService.subscribe(ProductService.Events.DELETED, this.handleProductDeletion);
-    eventBusService.subscribe(ProductVariantService.Events.CREATED, this.handleProductVariantChange);
-    eventBusService.subscribe(ProductVariantService.Events.UPDATED, this.handleProductVariantChange);
-    eventBusService.subscribe(ProductVariantService.Events.DELETED, this.handleProductVariantChange);
+    this.eventBusService_.subscribe(ProductService.Events.UPDATED, this.handleProductUpdate);
+    this.eventBusService_.subscribe(ProductService.Events.CREATED, this.handleProductCreation);
+    this.eventBusService_.subscribe(ProductService.Events.DELETED, this.handleProductDeletion);
+    this.eventBusService_.subscribe(ProductVariantService.Events.CREATED, this.handleProductVariantChange);
+    this.eventBusService_.subscribe(ProductVariantService.Events.UPDATED, this.handleProductVariantChange);
+    this.eventBusService_.subscribe(ProductVariantService.Events.DELETED, this.handleProductVariantChange);
   }
 
   handleProductCreation = async (data) => {

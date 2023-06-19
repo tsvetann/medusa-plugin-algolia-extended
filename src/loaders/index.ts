@@ -1,4 +1,4 @@
-import { Logger, MedusaContainer } from "@medusajs/modules-sdk"
+import { MedusaContainer } from "@medusajs/modules-sdk"
 import SearchService from "../services/search"
 import { AlgoliaPluginOptions } from "../types"
 

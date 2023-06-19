@@ -3,6 +3,8 @@ import { IEventBusService, ISearchService } from "@medusajs/types";
 import { defaultSearchIndexingProductRelations } from "@medusajs/utils"
 import { indexTypes } from "medusa-core-utils"
 
+const productRelations = [...defaultSearchIndexingProductRelations, "categories"]
+
 type InjectedDependencies = {
   eventBusService: IEventBusService
   algoliaService: ISearchService
@@ -29,7 +31,7 @@ export default class ProductSearchSubscriber {
 
   handleProductCreation = async (data) => {
     const product = await this.productService_.retrieve(data.id, {
-      relations: defaultSearchIndexingProductRelations,
+      relations: productRelations,
     })
     await this.searchService_.addDocuments(
       ProductService.IndexName,
@@ -41,7 +43,7 @@ export default class ProductSearchSubscriber {
   handleProductUpdate = async (data): Promise<any> => {
     const { id } = data;
     const product = await this.productService_.retrieve(id, {
-      relations: defaultSearchIndexingProductRelations,
+      relations: productRelations,
     });
 
     await this.searchService_.addDocuments(
@@ -59,7 +61,7 @@ export default class ProductSearchSubscriber {
 
   handleProductVariantChange = async (data) => {
     const product = await this.productService_.retrieve(data.product_id, {
-      relations: defaultSearchIndexingProductRelations,
+      relations: productRelations,
     })
     await this.searchService_.addDocuments(
       ProductService.IndexName,

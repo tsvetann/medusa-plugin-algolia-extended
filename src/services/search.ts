@@ -5,7 +5,7 @@ import { MedusaContainer } from "@medusajs/modules-sdk"
 import { AlgoliaPluginOptions, SearchOptions } from "../types"
 import { transformProduct } from "../utils/transformer"
 
-class SearchService extends SearchUtils.AbstractSearchService {
+class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
   isDefault = false
 
   protected readonly config_: AlgoliaPluginOptions
@@ -188,4 +188,4 @@ class SearchService extends SearchUtils.AbstractSearchService {
   }
 }
 
-export default SearchService
+export default AlgoliaSearchService

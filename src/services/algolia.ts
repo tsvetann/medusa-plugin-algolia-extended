@@ -4,6 +4,7 @@ import Algolia, { SearchClient } from "algoliasearch"
 import { MedusaContainer } from "@medusajs/modules-sdk"
 import { AlgoliaPluginOptions, SearchOptions } from "../types"
 import { transformProduct } from "../utils/transformer"
+import filterPublishedProducts from "../utils/filter-published-products"
 
 class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
   isDefault = false
@@ -68,9 +69,14 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
    * @return {*}
    */
   async addDocuments(indexName: string, documents: any, type: string) {
+    const filteredDocuments = filterPublishedProducts(documents)
+    if (!filteredDocuments?.length) {
+      return []
+    }
+
     const transformedDocuments = await this.getTransformedDocuments(
       type,
-      documents
+      filteredDocuments
     )
 
     console.log(`Adding ${transformedDocuments.length} documents to Algolia's ${indexName} index`)
@@ -87,9 +93,14 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
    * @return {Promise<{object}>} - returns response from search engine provider
    */
   async replaceDocuments(indexName: string, documents: any, type: string) {
+    const filteredDocuments = filterPublishedProducts(documents)
+    if (!filteredDocuments?.length) {
+      return []
+    }
+
     const transformedDocuments = await this.getTransformedDocuments(
       type,
-      documents
+      filteredDocuments
     )
     return await this.client_
       .initIndex(indexName)
@@ -166,9 +177,9 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
     }
 
     switch (type) {
-      case SearchTypes.indexTypes.PRODUCTS:
+      case SearchUtils.indexTypes.PRODUCTS:
         const productsTransformer =
-          this.config_.settings?.[SearchTypes.indexTypes.PRODUCTS]
+          this.config_.settings?.[SearchUtils.indexTypes.PRODUCTS]
             ?.transformer ?? transformProduct
 
         const transformed = await Promise.allSettled(documents.map(doc => productsTransformer(doc, this.container_)));
@@ -179,7 +190,7 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
           console.error('Error transforming products', errors);
         }
 
-        const fulfilled = <T,>(p:PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === 'fulfilled';
+        const fulfilled = <T,>(p: PromiseSettledResult<T>): p is PromiseFulfilledResult<T> => p.status === 'fulfilled';
 
         return transformed.filter(fulfilled).map((r) => r.value);
       default:

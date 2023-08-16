@@ -7,6 +7,7 @@ Provide powerful indexing and searching features in your commerce application wi
 ## Features
 
 - Flexible configurations for specifying searchable and retrievable attributes.
+- Remove draft products from Algolia index
 - Utilize Algolia's powerful search functionalities including typo-tolerance, query suggestions, results ranking, and more.
 - Access Medusa container inside the transfomer function for unlimited possibilities
 - Additional logging, for instance how many documents are sent to Algolia for indexing

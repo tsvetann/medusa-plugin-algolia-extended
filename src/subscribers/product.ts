@@ -2,6 +2,7 @@ import { ProductService, ProductVariantService } from "@medusajs/medusa";
 import { IEventBusService, ISearchService } from "@medusajs/types";
 import { defaultSearchIndexingProductRelations } from "@medusajs/utils"
 import { indexTypes } from "medusa-core-utils"
+import { ProductStatus } from "@medusajs/utils"
 
 const productRelations = [...defaultSearchIndexingProductRelations, "categories"]
 
@@ -45,6 +46,12 @@ export default class ProductSearchSubscriber {
     const product = await this.productService_.retrieve(id, {
       relations: productRelations,
     });
+
+    if (product.status !== ProductStatus.PUBLISHED) {
+      console.log('removing product from index')
+      await this.searchService_.deleteDocument(ProductService.IndexName, id);
+      return true;
+    }
 
     await this.searchService_.addDocuments(
       ProductService.IndexName,

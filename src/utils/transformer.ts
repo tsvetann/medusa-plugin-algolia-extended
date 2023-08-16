@@ -1,4 +1,4 @@
-import { variantKeys } from "@medusajs/types"
+import { variantKeys } from "@medusajs/utils"
 import { MedusaContainer } from "@medusajs/medusa"
 
 const prefix = `variant`

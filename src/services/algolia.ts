@@ -1,12 +1,12 @@
 import { SearchTypes } from "@medusajs/types"
-import { SearchUtils } from "@medusajs/utils"
+import { AbstractSearchService, indexTypes } from "@medusajs/utils"
 import Algolia, { SearchClient } from "algoliasearch"
 import { MedusaContainer } from "@medusajs/modules-sdk"
 import { AlgoliaPluginOptions, SearchOptions } from "../types"
 import { transformProduct } from "../utils/transformer"
 import filterPublishedProducts from "../utils/filter-published-products"
 
-class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
+class AlgoliaSearchService extends AbstractSearchService {
   isDefault = false
 
   protected readonly config_: AlgoliaPluginOptions
@@ -62,13 +62,14 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
   }
 
   /**
-   *
+   * Adds a full sync of all products
+   * 
    * @param {string} indexName
    * @param {Array} documents - products list array
    * @param {*} type
    * @return {*}
    */
-  async addDocuments(indexName: string, documents: any, type: string) {
+  async addDocuments(indexName: string, documents: any[], type: string) {
     const filteredDocuments = filterPublishedProducts(documents)
     if (!filteredDocuments?.length) {
       return []
@@ -79,7 +80,7 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
       filteredDocuments
     )
 
-    console.log(`Adding ${transformedDocuments.length} documents to Algolia's ${indexName} index`)
+    console.log(`Adding ${transformedDocuments.length} published documents to Algolia's ${indexName} index`)
     return await this.client_
       .initIndex(indexName)
       .saveObjects(transformedDocuments)
@@ -102,6 +103,8 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
       type,
       filteredDocuments
     )
+
+    console.log(`Replacing ${transformedDocuments.length} published documents to Algolia's ${indexName} index`)
     return await this.client_
       .initIndex(indexName)
       .replaceAllObjects(transformedDocuments)
@@ -177,9 +180,9 @@ class AlgoliaSearchService extends SearchUtils.AbstractSearchService {
     }
 
     switch (type) {
-      case SearchUtils.indexTypes.PRODUCTS:
+      case indexTypes.PRODUCTS:
         const productsTransformer =
-          this.config_.settings?.[SearchUtils.indexTypes.PRODUCTS]
+          this.config_.settings?.[indexTypes.PRODUCTS]
             ?.transformer ?? transformProduct
 
         const transformed = await Promise.allSettled(documents.map(doc => productsTransformer(doc, this.container_)));

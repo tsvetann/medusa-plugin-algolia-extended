@@ -1,5 +1,4 @@
-import { Product } from "@medusajs/medusa"
-import { ProductStatus } from "@medusajs/utils"
+import { Product, ProductStatus } from "@medusajs/medusa"
 
 export default function filterPublishedProducts(products: Product[]) {
   if (!Array.isArray(products)) {

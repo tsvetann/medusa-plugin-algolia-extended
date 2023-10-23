@@ -1,5 +1,5 @@
 import { SearchTypes } from "@medusajs/types"
-import { AbstractSearchService, indexTypes } from "@medusajs/utils"
+import { indexTypes, AbstractSearchService } from "@medusajs/utils"
 import Algolia, { SearchClient } from "algoliasearch"
 import { MedusaContainer } from "@medusajs/modules-sdk"
 import { AlgoliaPluginOptions, SearchOptions } from "../types"
